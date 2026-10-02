@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>櫻綺｜八字速覽與開運小測驗</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#f4ede6; --surface:#fbf7f2; --ink:#2b2230; --muted:#6e6270; --line:#ddd1c6;
+  --sakura:#b4566f; --sakura-soft:#f3dde3; --gold:#94702d; --seal:#b03a2e;
+  --wood:#4f7f4a; --fire:#c1503a; --earth:#a37a2c; --metal:#7c7c8c; --water:#356591;
+  --serif:"Noto Serif TC","Songti TC","PMingLiU",serif;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#1d1822; --surface:#26202c; --ink:#f0e7de; --muted:#b4a8b2; --line:#3d3442;
+    --sakura:#ee9fb4; --sakura-soft:#3a2832; --gold:#dcb874; --seal:#e0604f;
+    --wood:#85b77d; --fire:#ec8467; --earth:#d6ab5d; --metal:#b9b9c8; --water:#78a7d4;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1d1822; --surface:#26202c; --ink:#f0e7de; --muted:#b4a8b2; --line:#3d3442;
+  --sakura:#ee9fb4; --sakura-soft:#3a2832; --gold:#dcb874; --seal:#e0604f;
+  --wood:#85b77d; --fire:#ec8467; --earth:#d6ab5d; --metal:#b9b9c8; --water:#78a7d4;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.75;-webkit-font-smoothing:antialiased}
+.wrap{max-width:560px;margin:0 auto;padding:28px 20px 56px}
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:22px}
+.brand{font-family:var(--serif);font-weight:900;font-size:44px;line-height:1;letter-spacing:.08em}
+.brand small{display:block;font-family:var(--sans);font-weight:400;font-size:14px;letter-spacing:.02em;color:var(--muted);margin-top:10px}
+.ig{font-size:14px;color:var(--sakura);text-decoration:none;white-space:nowrap}
+.tabs{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--ink);margin-bottom:26px}
+.tabs button{appearance:none;border:0;background:transparent;color:var(--ink);font:500 16px/1 var(--sans);padding:14px 8px;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--ink);color:var(--bg)}
+button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--sakura);outline-offset:2px}
+h1{font-family:var(--serif);font-weight:700;font-size:28px;line-height:1.35;margin:0 0 8px}
+.lead{color:var(--muted);margin:0 0 22px}
+label{display:block;font-weight:500;font-size:15px;margin:16px 0 6px}
+input,select{width:100%;font:16px var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--line);padding:12px;border-radius:0;appearance:none;-webkit-appearance:none}
+select{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 18px) 52%,calc(100% - 13px) 52%;background-size:5px 5px;background-repeat:no-repeat}
+.hint{font-size:13px;color:var(--muted);margin-top:6px}
+.primary{display:block;width:100%;margin-top:24px;padding:15px;border:0;background:var(--sakura);color:#fff;font:700 17px var(--sans);cursor:pointer;text-align:center;text-decoration:none}
+:root[data-theme="dark"] .primary{color:#2b1a20}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .primary{color:#2b1a20}}
+.ghost{display:block;width:100%;margin-top:10px;padding:13px;border:1px solid var(--line);background:transparent;color:var(--ink);font:500 15px var(--sans);cursor:pointer}
+a.ghost{text-align:center;text-decoration:none}
+.err{color:var(--seal);font-size:14px;margin-top:10px;min-height:1px}
+.result{margin-top:34px}
+.result[hidden]{display:none}
+
+/* 命盤 */
+.chart{display:grid;grid-template-columns:repeat(4,1fr);border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);background:var(--surface)}
+.pillar{text-align:center;padding:12px 4px 16px;border-left:1px solid var(--line);position:relative}
+.pillar:first-child{border-left:0}
+.pillar .pos{font-size:13px;color:var(--muted)}
+.pillar .gz{font-family:var(--serif);font-weight:900;font-size:clamp(34px,11vw,48px);line-height:1.15;margin-top:6px}
+.pillar .gz span{display:block}
+.pillar .el{font-size:12px;color:var(--muted);margin-top:4px}
+.pillar.me{background:var(--sakura-soft)}
+.seal{position:absolute;top:8px;right:6px;writing-mode:vertical-rl;font-family:var(--serif);font-size:11px;font-weight:700;color:#fff;background:var(--seal);padding:4px 2px;line-height:1.1}
+.pillar.none .gz{color:var(--line)}
+.c0{color:var(--wood)}.c1{color:var(--fire)}.c2{color:var(--earth)}.c3{color:var(--metal)}.c4{color:var(--water)}
+.note{font-size:13px;color:var(--muted);margin:10px 0 0}
+.warn{font-size:14px;border-left:3px solid var(--gold);padding:8px 12px;margin:14px 0 0;background:var(--surface)}
+.block{margin-top:30px}
+.block h2{font-family:var(--serif);font-size:22px;margin:0 0 10px;line-height:1.4}
+.daymaster{font-family:var(--serif);font-size:20px;color:var(--sakura);margin:0 0 6px}
+.keys{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 0;padding:0;list-style:none}
+.keys li{border:1px solid var(--sakura);color:var(--sakura);padding:2px 10px;font-size:14px}
+.bars{margin-top:8px}
+.bar{display:grid;grid-template-columns:2.2em 1fr 1.6em;align-items:center;gap:10px;margin:8px 0;font-size:15px}
+.bar .t{height:12px;background:var(--line);position:relative}
+.bar .f{position:absolute;inset:0 auto 0 0;transition:width .6s ease}
+.bar b{font-family:var(--serif)}
+.cta{margin-top:34px;padding:22px 20px;border:2px solid var(--ink);background:var(--surface)}
+.cta h3{font-family:var(--serif);font-size:21px;margin:0 0 8px;line-height:1.45}
+.cta p{margin:0 0 4px}
+.price{font-family:var(--serif);font-size:18px;color:var(--gold);font-weight:700;margin-top:10px}
+.share{font-size:14px;color:var(--muted);margin-top:14px;text-align:center}
+
+/* 測驗 */
+.progress{display:flex;gap:6px;margin-bottom:18px}
+.progress i{flex:1;height:4px;background:var(--line)}
+.progress i.on{background:var(--sakura)}
+.q{font-family:var(--serif);font-size:23px;line-height:1.45;margin:0 0 16px}
+.opts{display:grid;gap:10px}
+.opt{text-align:left;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:15px 16px;font:16px/1.5 var(--sans);cursor:pointer}
+.opt:hover{border-color:var(--sakura)}
+.qcount{font-size:14px;color:var(--muted);margin-bottom:6px}
+.pick{margin-top:6px}
+.pick .tag{font-size:14px;color:var(--sakura)}
+.pick h2{font-family:var(--serif);font-size:30px;margin:4px 0 4px;line-height:1.3}
+.pick .sub{color:var(--gold);font-weight:500;margin:0 0 12px}
+.second{margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
+.second h4{font-family:var(--serif);font-size:18px;margin:0 0 4px}
+.plans{margin-top:16px;border-top:1px solid var(--line)}
+.plan-group{font-family:var(--serif);font-weight:700;color:var(--sakura);margin:16px 0 4px}
+.plan{display:grid;grid-template-columns:1fr auto;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.plan b{font-weight:700}
+.plan p{font-size:14px;color:var(--muted);margin:2px 0 0;line-height:1.65}
+.plan span{font-family:var(--serif);font-weight:700;color:var(--gold);font-size:18px;white-space:nowrap}
+.creed{margin-top:28px;text-align:center}
+.creed h3{font-family:var(--serif);font-size:18px;margin:0 0 8px}
+.creed p{font-family:var(--serif);margin:2px 0;font-size:15px;color:var(--muted)}
+footer{margin-top:44px;font-size:12px;color:var(--muted);line-height:1.7}
+@media (prefers-reduced-motion:reduce){.bar .f{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">櫻綺<small>命理小工具，全程線上</small></div>
+    <a class="ig" href="https://www.instagram.com/goodluck0822" target="_blank" rel="noopener">@goodluck0822</a>
+  </header>
+
+  <div class="tabs" role="tablist">
+    <button role="tab" id="tab-bazi" aria-selected="true" data-view="bazi">八字速覽</button>
+    <button role="tab" id="tab-quiz" aria-selected="false" data-view="quiz">開運物小測驗</button>
+  </div>
+
+  <!-- 八字速覽 -->
+  <section id="view-bazi" role="tabpanel" aria-labelledby="tab-bazi">
+    <h1>一分鐘看懂你的日主</h1>
+    <p class="lead">輸入出生日期和時辰，排出你的四柱，看看你是哪一種天生性格、五行偏哪一邊。</p>
+
+    <label for="bd">國曆出生日期</label>
+    <input id="bd" type="date" min="1901-01-01" max="2099-12-31" value="1990-01-01">
+
+    <label for="bh">出生時辰</label>
+    <select id="bh">
+      <option value="">不知道出生時間</option>
+      <option value="0.5">子時 00:00–00:59（早子）</option>
+      <option value="2">丑時 01:00–02:59</option>
+      <option value="4">寅時 03:00–04:59</option>
+      <option value="6">卯時 05:00–06:59</option>
+      <option value="8">辰時 07:00–08:59</option>
+      <option value="10">巳時 09:00–10:59</option>
+      <option value="12" selected>午時 11:00–12:59</option>
+      <option value="14">未時 13:00–14:59</option>
+      <option value="16">申時 15:00–16:59</option>
+      <option value="18">酉時 17:00–18:59</option>
+      <option value="20">戌時 19:00–20:59</option>
+      <option value="22">亥時 21:00–22:59</option>
+      <option value="23.5">子時 23:00–23:59（晚子）</option>
+    </select>
+    <p class="hint">以台灣時間排盤。不知道時辰也可以看，只是少了時柱。</p>
+
+    <button class="primary" id="go">排出我的命盤</button>
+    <p class="err" id="err" role="alert"></p>
+
+    <div class="result" id="res" hidden aria-live="polite">
+      <div class="chart" id="chart"></div>
+      <p class="note">上排天干、下排地支，顏色代表五行。</p>
+      <div id="warn"></div>
+
+      <div class="block">
+        <h2 id="dmTitle"></h2>
+        <p class="daymaster" id="dmImage"></p>
+        <p id="dmText"></p>
+        <ul class="keys" id="dmKeys"></ul>
+      </div>
+
+      <div class="block">
+        <h2>你的五行分布</h2>
+        <div class="bars" id="bars"></div>
+        <p id="elText"></p>
+      </div>
+
+      <div class="block">
+        <h2>你的財運線索</h2>
+        <p id="moneyText"></p>
+      </div>
+
+      <div class="cta">
+        <h3>這只是命盤的第一層</h3>
+        <p>速覽只看了日主和五行。完整的命盤還要看十神、格局、大運和流年，才知道你的財從哪裡來、什麼時候適合衝、什麼時候該守。</p>
+        <div class="plans">
+          <p class="plan-group">迷你八字財運命盤（本月限量）</p>
+          <div class="plan"><div><b>A｜天生賺錢模式</b><p>你適合哪種賺錢模式、財從哪裡進來、為什麼容易守不住，附完整電子版解析和個人化調整方向。</p></div><span>$499</span></div>
+          <div class="plan"><div><b>B｜天生賺錢模式 PLUS</b><p>A 的全部內容，再加 2026 下半年到 2027 的財運趨勢、適合衝刺與守成的時間點，以及 1 題指定的事業或財運問題。</p></div><span>$999</span></div>
+          <p class="plan-group">完整八字諮詢</p>
+          <div class="plan"><div><b>一次諮詢</b><p>當次不限問題，命盤上的任何疑問都可以問。</p></div><span>$1,800</span></div>
+          <div class="plan"><div><b>終身諮詢</b><p>不限問題、不限時間，包含流年流月運勢、性格解析、姻緣事業財運與運勢破解。</p></div><span>$3,600</span></div>
+        </div>
+        <a class="primary" href="https://ig.me/m/goodluck0822" target="_blank" rel="noopener">私訊櫻綺預約命盤</a>
+        <p class="share">截圖這一頁分享到限動並標記 @goodluck0822</p>
+      </div>
+      <div class="creed">
+        <h3>櫻綺的論命守則</h3>
+        <p>依理推命，絕不危言聳聽</p>
+        <p>依命改運，絕不威言恫嚇</p>
+        <p>隨緣助渡，絕不強行推銷</p>
+        <p>痌瘝在抱，絕不藉機斂財</p>
+        <p>守口如瓶，絕不揭人隱私</p>
+      </div>
+      <button class="ghost" id="again">重新輸入</button>
+    </div>
+  </section>
+
+  <!-- 開運物測驗 -->
+  <section id="view-quiz" role="tabpanel" aria-labelledby="tab-quiz" hidden>
+    <div id="quizBox"></div>
+  </section>
+
+  <footer>
+    八字速覽依台灣時間（UTC+8）推算節氣排盤，未校正真太陽時與早年夏令時間；結果為性格與五行的初步參考，完整解讀以櫻綺老師一對一諮詢為準。<br>© 櫻綺 @goodluck0822
+  </footer>
+</div>
+
+<script>
+(function(){
+var S='甲乙丙丁戊己庚辛壬癸', B='子丑寅卯辰巳午未申酉戌亥', E=['木','火','土','金','水'];
+var BE=[4,2,0,0,2,1,1,2,3,3,2,4];
+function se(i){return Math.floor(i/2)}
+
+/* 太陽視黃經（低精度公式，誤差約數分鐘） */
+function sunLon(jd){
+  var T=(jd-2451545)/36525,r=Math.PI/180;
+  var L0=280.46646+36000.76983*T+0.0003032*T*T;
+  var M=(357.52911+35999.05029*T-0.0001537*T*T)*r;
+  var C=(1.914602-0.004817*T-0.000014*T*T)*Math.sin(M)+(0.019993-0.000101*T)*Math.sin(2*M)+0.000289*Math.sin(3*M);
+  var Om=(125.04-1934.136*T)*r;
+  var l=L0+C-0.00569-0.00478*Math.sin(Om);
+  return ((l%360)+360)%360;
+}
+
+function calc(y,mo,d,hour){
+  var known = hour!==null;
+  var h = known?hour:12;
+  var jd = Date.UTC(y,mo-1,d)/864e5+2440587.5+(h-8)/24;
+  var lon = sunLon(jd);
+  var m = Math.floor((((lon-315)%360)+360)%360/30); // 0=寅 … 11=丑
+  var by = y;
+  if(mo<=2 && m>=10) by = y-1;
+  var yi = (((by-4)%60)+60)%60, ys=yi%10, yb=yi%12;
+  var ms = ((ys%5)*2+2+m)%10, mb=(m+2)%12;
+  var jdn = Date.UTC(y,mo-1,d)/864e5+2440588 + (known && hour>23?1:0);
+  var di = ((jdn+49)%60+60)%60, ds=di%10, db=di%12;
+  var hs=null,hb=null;
+  if(known){hb=Math.floor((hour+1)/2)%12; hs=((ds%5)*2+hb)%10;}
+  var off = (((lon-15)%30)+30)%30;
+  var nearJie = off<1.2 || off>28.8;
+  return {p:[[ys,yb],[ms,mb],[ds,db],known?[hs,hb]:null], nearJie:nearJie};
+}
+
+var DM={
+ 0:{img:'參天大樹',t:'你像一棵往上長的大樹，正直、有原則，認定的事會一路做到底。你不喜歡被壓著、被管太緊，給你空間，你會自己長得很高。',k:['有擔當','直率','想往上走'],money:'你的財多半跟「專業」和「時間」綁在一起，越穩定累積口碑，財就越扎實。最怕的是太好面子，替別人扛下不該扛的。'},
+ 1:{img:'花草藤蔓',t:'你柔軟有彈性，懂得看環境、借力使力，人緣通常不差。看起來好說話，其實心裡很有主意，只是不愛硬碰硬。',k:['細膩','適應力強','有人緣'],money:'你的財常常是「人」帶來的，合作、介紹、貴人牽線都是你的財路。要留意的是心太軟，借錢或幫忙前先想清楚。'},
+ 2:{img:'太陽',t:'你熱情大方、存在感強，走到哪都容易成為焦點，也很願意照亮身邊的人。情緒來得快去得也快，不太記仇。',k:['開朗','有感染力','慷慨'],money:'你的財跟「被看見」有關，越願意站上舞台、曝光自己，機會越多。要留意的是花錢跟你的熱情一樣大方。'},
+ 3:{img:'燭光',t:'你外表溫和，內心的火卻很穩，觀察力和洞察力都很強。你在意的人不多，但一旦在意就會很用心。',k:['專注','體貼','有靈感'],money:'你的財適合細水長流，靠一門手藝、一份專業慢慢累積。容易想太多而錯過時機，該出手時要相信自己。'},
+ 4:{img:'高山',t:'你穩重可靠、說到做到，是身邊人眼中的定心丸。你不喜歡變來變去，做決定慢，但做了就不太動搖。',k:['踏實','守信','給人安全感'],money:'你的財適合「守」與「累積」，穩健的投資、不動產或長期經營都適合你。要留意太保守而錯過成長的機會。'},
+ 5:{img:'田園沃土',t:'你溫和、會照顧人，也很務實，常常是默默把事情處理好的那一個。你包容力強，但累積太多委屈時也需要出口。',k:['包容','細心','多才多藝'],money:'你的財跟「服務」和「經營關係」有關，把人照顧好，錢自然會跟著來。要留意別把自己的需求排在最後。'},
+ 6:{img:'刀劍',t:'你果斷、講義氣、行動力強，遇到不公平的事會想站出來。說話直，但心不壞，認定的朋友會挺到底。',k:['俐落','重義氣','有魄力'],money:'你的財是「拚」出來的，在競爭和挑戰中反而更容易突破。要留意衝太快，大筆決定前多給自己一天想想。'},
+ 7:{img:'珠玉',t:'你精緻、有品味，對美和細節特別敏銳，自尊心也比較強。對自己要求高，有時候也會不小心對自己太嚴格。',k:['有美感','敏銳','追求完美'],money:'你的財跟「品味」和「精緻的專業」有關，越是把一件事做到細緻，價值越高。要留意別因為追求完美而遲遲不開始。'},
+ 8:{img:'江河',t:'你聰明靈活、反應快、視野大，不喜歡被困在固定的框架裡。你需要自由，也很會在變動中找到出路。',k:['聰明','格局大','愛自由'],money:'你的財在「流動」裡，資訊、人脈、跨領域的機會都是你的財路。要留意財來得快也去得快，記得幫自己設一個存錢的閘門。'},
+ 9:{img:'雨露',t:'你敏感細膩、直覺很準，常常能感受到別人沒說出口的情緒。你的溫柔是力量，但也容易吸收太多別人的情緒。',k:['直覺強','溫柔','想像力豐富'],money:'你的財適合靠靈感、創意或幕後策劃，不一定要站到最前面。要留意情緒影響判斷，心定了財才定。'}
+};
+var EL_LACK={
+ 0:'木代表成長和規劃的力量，少木的人常常很努力，卻不太會替自己的未來鋪路。',
+ 1:'火代表熱情和被看見，少火的人能力很好，卻常常不好意思表現自己。',
+ 2:'土代表穩定和累積，少土的人常覺得錢進得來，卻不太存得住。',
+ 3:'金代表決斷和收成，少金的人容易心軟，該收尾、該拒絕的時候比較猶豫。',
+ 4:'水代表智慧和流動，少水的人做事踏實，但有時會卡在同一個想法裡出不來。'
+};
+
+function el(i,isStem){return isStem?se(i):BE[i]}
+
+function render(r){
+  var labels=['年柱','月柱','日柱','時柱'], chart=document.getElementById('chart');
+  chart.innerHTML='';
+  var counts=[0,0,0,0,0], total=0;
+  r.p.forEach(function(p,i){
+    var div=document.createElement('div');
+    div.className='pillar'+(i===2?' me':'')+(p?'':' none');
+    if(p){
+      var a=el(p[0],true), b=el(p[1],false);
+      counts[a]++;counts[b]++;total+=2;
+      div.innerHTML='<div class="pos">'+labels[i]+'</div><div class="gz"><span class="c'+a+'">'+S[p[0]]+'</span><span class="c'+b+'">'+B[p[1]]+'</span></div><div class="el">'+E[a]+'・'+E[b]+'</div>'+(i===2?'<span class="seal">日主</span>':'');
+    }else{
+      div.innerHTML='<div class="pos">'+labels[i]+'</div><div class="gz"><span>？</span><span>？</span></div><div class="el">未填時辰</div>';
+    }
+    chart.appendChild(div);
+  });
+
+  var w=document.getElementById('warn');
+  w.innerHTML = r.nearJie ? '<p class="warn">你出生在節氣交接前後，年柱或月柱可能要依出生的時分才能確定。想看準的話，可以帶著精確出生時間找櫻綺確認。</p>' : '';
+
+  var ds=r.p[2][0], d=DM[ds], dmEl=E[se(ds)];
+  document.getElementById('dmTitle').textContent='你的日主是「'+S[ds]+dmEl+'」';
+  document.getElementById('dmImage').textContent='像'+d.img;
+  document.getElementById('dmText').textContent=d.t;
+  document.getElementById('dmKeys').innerHTML=d.k.map(function(x){return '<li>'+x+'</li>'}).join('');
+
+  var bars=document.getElementById('bars'), max=Math.max.apply(null,counts);
+  bars.innerHTML=counts.map(function(c,i){
+    return '<div class="bar"><b class="c'+i+'">'+E[i]+'</b><div class="t"><div class="f" style="width:0;background:var(--'+['wood','fire','earth','metal','water'][i]+')" data-w="'+(c/total*100)+'"></div></div><span>'+c+'</span></div>';
+  }).join('');
+  requestAnimationFrame(function(){requestAnimationFrame(function(){
+    bars.querySelectorAll('.f').forEach(function(f){f.style.width=f.dataset.w+'%'});
+  })});
+
+  var min=Math.min.apply(null,counts), lack=counts.indexOf(min), strong=counts.indexOf(max);
+  var txt = min===0 ? '你的命盤裡看不到「'+E[lack]+'」。' : '你的命盤中「'+E[lack]+'」最少。';
+  txt += EL_LACK[lack]+' 最旺的是「'+E[strong]+'」，這是你最自然、最拿手的能量。五行多或少都不代表好壞，要搭配格局和大運一起看，才知道該補什麼、該怎麼用。';
+  document.getElementById('elText').textContent=txt;
+  document.getElementById('moneyText').textContent=d.money;
+
+  var res=document.getElementById('res');
+  res.hidden=false;
+  res.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth', block:'start'});
+}
+
+document.getElementById('go').addEventListener('click',function(){
+  var v=document.getElementById('bd').value, err=document.getElementById('err');
+  err.textContent='';
+  if(!v){err.textContent='請先選擇出生日期。';return;}
+  var parts=v.split('-').map(Number);
+  if(parts[0]<1901||parts[0]>2099){err.textContent='目前支援 1901 到 2099 年出生的日期。';return;}
+  var hv=document.getElementById('bh').value;
+  render(calc(parts[0],parts[1],parts[2],hv===''?null:Number(hv)));
+});
+document.getElementById('again').addEventListener('click',function(){
+  document.getElementById('res').hidden=true;
+  window.scrollTo({top:0});
+  document.getElementById('bd').focus();
+});
+
+/* 開運物測驗 */
+var P={
+ yuan:{name:'緣滿鹽',sub:'招財與人緣',price:'$380',d:'適合想讓財運和人際一起變順的你。可以放在錢包、包包或工作桌上，當作每天提醒自己大方迎接機會與貴人的小儀式。'},
+ qifu:{name:'人緣貴人祈福',sub:'由命理師為你祈福',price:'$1,500 起，另有 $1,980、$3,200、$4,000 方案',d:'適合人際卡卡、想遇到貴人的你。由命理師為你進行祈福，全程線上，方案可以依你的需求一起討論。'},
+ ling:{name:'靈癒鹽',sub:'靜心與除穢',price:'$330',d:'適合最近心很累、容易被別人情緒影響的你。可以放在床頭或常待的角落，讓自己每天有一個安靜下來、整理心情的時刻。'},
+ small:{name:'隨身化煞小羅盤',sub:'隨身攜帶',price:'$2,000',d:'適合常在外奔波、行程不固定的你。放在包包裡隨身帶著，讓每次出門都多一份安心。'},
+ car:{name:'車用擋車關中羅盤',sub:'行車平安',price:'$2,300',d:'適合常開車、每天通勤或跑業務的你。放在車上，陪你出入平安。'},
+ cai:{name:'線上補財庫',sub:'吉日進行',price:'$900 起，另有 $1,800、$2,700、$3,600、$5,400、$10,800 方案',d:'適合錢進得來卻留不住的你。由專業命理師在吉日為你進行，全程線上，不需要到現場。'},
+ consult:{name:'八字財運命盤諮詢',sub:'全程線上文字',price:'迷你財運命盤 $499 起，完整一次諮詢 $1,800、終身諮詢 $3,600',d:'適合想先了解自己的你。從命盤看你的財從哪裡來、適合用什麼方式累積，全程文字進行，可以慢慢看、反覆讀。'}
+};
+var ORDER=['yuan','qifu','ling','small','car','cai','consult'];
+var Q=[
+ {q:'最近最讓你卡住的是哪一塊？',o:[
+  ['錢進得來，卻總是留不住',{cai:2,yuan:1}],
+  ['人際關係、貴人運不太順',{yuan:2,qifu:2}],
+  ['心很累，睡不好，情緒容易被影響',{ling:3}],
+  ['家裡或出門在外，總覺得不安穩',{small:1,car:1,ling:2}]]},
+ {q:'你平常待最久的地方是？',o:[
+  ['家裡',{ling:2,yuan:1}],
+  ['車上，每天都要開車',{car:3}],
+  ['辦公室或自己的店面',{yuan:1,qifu:1}],
+  ['到處跑，不太固定',{small:2,ling:1}]]},
+ {q:'最近有沒有遇到這些狀況？',o:[
+  ['剛搬家、換工作或準備開店',{yuan:1,qifu:1,cai:1}],
+  ['常遇到小人或口舌是非',{small:1,ling:1,qifu:1}],
+  ['花錢花得很兇，存不了錢',{cai:2}],
+  ['想好好整理自己的狀態',{ling:2}]]},
+ {q:'你比較想用什麼方式開始？',o:[
+  ['隨身帶著，隨時都感覺得到',{small:1,yuan:1,ling:1}],
+  ['放在車上或固定的角落',{car:1,ling:1}],
+  ['交給專業的人，一次處理好',{cai:2,qifu:1}],
+  ['先搞懂自己的命盤再說',{consult:3}]]}
+];
+var step=0, score={};
+var box=document.getElementById('quizBox');
+function startQuiz(){step=0;score={};ORDER.forEach(function(k){score[k]=0});drawQ();}
+function drawQ(){
+  var q=Q[step];
+  var prog='<div class="progress" aria-hidden="true">'+Q.map(function(_,i){return '<i class="'+(i<=step?'on':'')+'"></i>'}).join('')+'</div>';
+  box.innerHTML=(step===0?'<h1>你現在最適合哪一個開運物？</h1><p class="lead">四個問題，看看你現在的狀態最需要哪一種支持。</p>':'')+
+    prog+'<div class="qcount">第 '+(step+1)+' 題，共 '+Q.length+' 題</div><p class="q">'+q.q+'</p><div class="opts">'+
+    q.o.map(function(o,i){return '<button class="opt" data-i="'+i+'">'+o[0]+'</button>'}).join('')+'</div>';
+  box.querySelectorAll('.opt').forEach(function(b){b.addEventListener('click',function(){
+    var add=q.o[+b.dataset.i][1];
+    Object.keys(add).forEach(function(k){score[k]+=add[k]});
+    step++;
+    if(step<Q.length){drawQ();box.querySelector('.opt').focus();}else{showPick();}
+  })});
+}
+function showPick(){
+  var ranked=ORDER.slice().sort(function(a,b){return score[b]-score[a]||ORDER.indexOf(a)-ORDER.indexOf(b)});
+  var a=P[ranked[0]], b=P[ranked[1]];
+  box.innerHTML='<div class="pick"><div class="tag">你現在最適合的是</div><h2>'+a.name+'</h2><p class="sub">'+a.sub+'</p><p>'+a.d+'</p><p class="price">'+a.price+'</p>'+
+   '<a class="primary" href="https://ig.me/m/goodluck0822" target="_blank" rel="noopener">私訊櫻綺詢問'+a.name+'</a>'+
+   '<div class="second"><h4>也很適合你：'+b.name+'</h4><p>'+b.d+'</p><p class="price" style="font-size:16px">'+b.price+'</p><a class="ghost" href="https://ig.me/m/goodluck0822" target="_blank" rel="noopener">私訊櫻綺詢問'+b.name+'</a></div>'+
+   '<div class="cta"><h3>想知道哪一種最對你的命盤？</h3><p>開運物是輔助，真正的關鍵是你的命盤缺什麼、正在走什麼運。可以先用「八字速覽」看看自己的日主和五行。</p><button class="ghost" id="toBazi">去看我的八字速覽</button></div>'+
+   '<p class="share">截圖結果分享到限動並標記 @goodluck0822</p><button class="ghost" id="redo">重新測驗</button></div>';
+  document.getElementById('redo').addEventListener('click',startQuiz);
+  document.getElementById('toBazi').addEventListener('click',function(){show('bazi')});
+  window.scrollTo({top:0});
+}
+
+/* 分頁切換，網址加 #quiz 可直接開測驗 */
+function show(v){
+  ['bazi','quiz'].forEach(function(k){
+    document.getElementById('view-'+k).hidden = k!==v;
+    document.getElementById('tab-'+k).setAttribute('aria-selected', k===v);
+  });
+  if(v==='quiz' && !box.innerHTML) startQuiz();
+  try{history.replaceState(null,'','#'+v)}catch(e){}
+}
+document.querySelectorAll('.tabs button').forEach(function(b){b.addEventListener('click',function(){show(b.dataset.view)})});
+show(location.hash==='#quiz'?'quiz':'bazi');
+})();
+</script>
+</body>
+</html>
